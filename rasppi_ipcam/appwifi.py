@@ -79,11 +79,12 @@ def gen_frames():  # generate frame by frame from camera
                 
         else:
             pass
-            
+
+#render temlate html code            
 @app.route('/')
 def index():
     return render_template('index.html')
-    
+#servo motor control request control
 @app.route("/test",methods=["POST"])
 def slider():
 	slider =request.form["slider"]
@@ -91,27 +92,26 @@ def slider():
 	sleep(5)
 	pwm.ChangeDutyCycle(0)
 	return render_template('index.html')  
-    
+#get video from camera    
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
+#controlled requests
 @app.route('/requests',methods=['POST','GET'])
 
 def tasks():
     global switch,camera
     if request.method == 'POST':
-        if request.form.get('click') == 'Capture':
+        if request.form.get('click') == 'Capture': ##take a photo
             global capture
             capture=1
-        elif  request.form.get('grey') == 'Grey':
+        elif  request.form.get('grey') == 'Grey': ##turn grey camera vision
             global grey
             grey=not grey
-        elif  request.form.get('neg') == 'Negative':
+        elif  request.form.get('neg') == 'Negative': ##turn negative camera vision
             global neg
-            neg=not neg
-     
-        elif  request.form.get('stop') == 'Stop/Start':
+            neg=not neg  
+        elif  request.form.get('stop') == 'Stop/Start': #start and stop camera
             
             if(switch==1):
                 switch=0
@@ -121,7 +121,7 @@ def tasks():
             else:
                 camera = cv2.VideoCapture(0)
                 switch=1
-        elif  request.form.get('rec') == 'Start/Stop Recording':
+        elif  request.form.get('rec') == 'Start/Stop Recording': ##start recording
             global rec, out
             rec= not rec
             if(rec):
